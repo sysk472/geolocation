@@ -3,4 +3,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  namespace :api, constraints: { format: 'json' } do
+    namespace :v1 do
+      resources :geological_locations, only: %i[show create destroy]
+    end
+  end
 end
