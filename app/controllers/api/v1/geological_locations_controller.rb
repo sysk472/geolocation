@@ -1,13 +1,13 @@
 class Api::V1::GeologicalLocationsController < ApplicationController
   #-----------------------------------------------------------------------------
-  # GET show /geological_locations/:url
+  # GET show /geological_locations/?
   #-----------------------------------------------------------------------------
   def show
 
   end
 
   #-----------------------------------------------------------------------------
-  # POST create /geological_locations/:url
+  # POST create /geological_locations
   #-----------------------------------------------------------------------------
   def create
 
