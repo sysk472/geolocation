@@ -6,15 +6,13 @@ services:
       - "3010:3000"
     volumes:
       - .:/usr/src/app
-    env_file:
-      - .env/development/database
-      - .env/development/api
     entrypoint: ["/usr/src/app/lib/docker-entrypoint.sh"]
     command: ["rails", "s", "-b", "0.0.0.0"]
   database:
     image: postgres
-    env_file:
-      - .env/development/database
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mypassword
     volumes:
       - db_data:/var/lib/postgresql/database
 volumes:

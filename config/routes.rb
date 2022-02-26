@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # root "articles#index"
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
-      resources :geological_locations, only: %i[show create destroy]
+      resources :geolocations, only: %i[show create destroy]
     end
   end
 end
