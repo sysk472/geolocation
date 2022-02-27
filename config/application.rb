@@ -25,5 +25,6 @@ module GeologicalApi
     config.api_only = true
     # Autoload contracts class
     config.autoload_paths << Rails.root.join('contracts')
+    config.exceptions_app = self.routes
   end
 end

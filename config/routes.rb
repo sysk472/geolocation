@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
       resources :geolocations, only: %i[show create destroy]
+      get '/geolocations', to: 'geolocations#show_by_query'
     end
   end
+
+  get "/404" => "errors#not_found"
+  get "/500" => "errors#exception"
 end

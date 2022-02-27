@@ -53,7 +53,7 @@ group :development do
 end
 
 # Faraday is an HTTP client library that provides a common interface over many adapters (such as Net::HTTP) and embraces the concept of Rack middleware when processing the request/response cycle.
-gem 'faraday'
+# gem 'faraday'
 
 # dry-transaction is a business transaction DSL. It provides a simple way to define a complex business transaction that includes processing over many steps and by many different objects.
 gem 'dry-transaction'
@@ -63,4 +63,6 @@ gem 'dry-validation'
 
 # Resolv is a thread-aware DNS resolver library written in Ruby. Resolv can handle multiple DNS requests concurrently without blocking the entire Ruby interpreter.
 gem 'resolv'
+
+gem 'httparty'
 

@@ -8,46 +8,26 @@ Accepts ip or url as a parameter, fetches geolocation data from external API,
 and saves it into the database.
 
 ```
-Request: POST /geolocations/register
+Request: POST /geolocations
 {
     "ip": "123.123.123.123"
 }
-Request: POST /geolocations/register
+Request: POST /geolocations
 {
     "url": "https://google.com"
 }
 Response: 201 - Created
 {
-    "id": "b4a5ccc2-4dc0-4f17-bee2-9389d5fad538"
+  geolocation: {
+    "id": "1"
     "ip": "123.123.123.123",
     "url": null,
     ...
+  }
 }
-Response: 422 - Unprocessable Entity (or other code)
+Response: 422 - Unprocessable Entity
 {
-    "error": "GeolocationAlreadyExistsError",
-    "description": "Geolocation with ip 123.123.123.123 already exists"
-}
-```
-
-## Update/Refresh geolocation
-
-Accepts ip or url as a parameter, fetches geolocation data from ... API,
-and updates existing geolocation.
-
-```
-Request: POST /geolocations/{id}/refresh
-{}
-Response: 200 - OK
-{
-    "ip": "123.123.123.123",
-    "url": null,
-    ...
-}
-Response: 404 - Not Found
-{
-    "error": "GeolocationNotFoundError",
-    "description": "Geolocation with ip 123.123.123.123 does not exist"
+  #check that
 }
 ```
 
@@ -64,30 +44,6 @@ Response: 200 - OK
     ...
 }
 Response: 404 - Not Found
-{
-    "error": "GeolocationNotFoundError",
-    "description": "Geolocation with ip 123.123.123.123 does not exist"
-}
-```
-
-## Get geolocations
-
-Returns geolocations by ip or url
-
-```
-Request: GET /geolocations?ip=...&url=...
-Response: 200 - OK
-{
-    "items": [
-        {
-            "ip": "123.123.123.123",
-            "url": null,
-            ...
-        }
-    ],
-    "total": 1,
-    // Pagination?
-}
 ```
 
 ## Delete geolocation
@@ -97,6 +53,14 @@ Delete geolocations by id
 ```
 Request: DELETE /geolocations/{id}
 Response: 204 - No Content
+{
+  message: "Geolocation deleted"
+}
+
+Response: 422 - No Content
+{
+  message: "There have been problems with deleting record"
+}
 ```
 
 ## Generic errors
