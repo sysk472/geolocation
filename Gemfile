@@ -45,6 +45,8 @@ group :development, :test do
   gem 'byebug'
   # rspec-rails brings the RSpec testing framework to Ruby on Rails as a drop-in alternative to its default testing framework, Minitest
   gem 'rspec-rails'
+  gem 'factory_girl_rails'
+  gem 'database_cleaner'
 end
 
 group :development do
