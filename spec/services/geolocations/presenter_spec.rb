@@ -4,35 +4,30 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
   include Dry::Monads::Result::Mixin
   subject { described_class.call(params) }
 
-  let(:params) { { ip: '195.245.224.52' } }
-
-  before(:each) do
-    allow_any_instance_of(ExternalApiCaller).to receive(:call).with(params[:ip]).and_return(Success(build(:geolocation).data))
-  end
-
-  context 'geolocation is retured if it is not found by url in db' do
+  context 'if it is not found by url in db' do
     let(:params) { { url: 'https://www.google.com/woho' } }
 
-    it 'should return geolocation' do
+    it 'should return geolocation form external API' do
       allow_any_instance_of(ExternalApiCaller).to receive(:call).with('google.com').and_return(Success(build(:geolocation, :google).data))
       is_expected.to be_success
     end
   end
 
-  context 'when passing valid body params' do
+  context 'when passing valid params' do
     let(:params) { { ip: '195.245.224.52' } }
     let(:geolocation) { create(:geolocation) }
-    let(:external_api_caller) do
+
+    before(:each) do
       allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip)
     end
 
-    context 'when geolocalization is in db' do
-      context 'geolocation is retured if it is found by ip in db' do
-        it { is_expected.to be_success }
+    context 'and ip geolocalization is in db' do
+      it 'should return geolocation' do
+        is_expected.to be_success
+        expect(subject.success).to be_a(Geolocation)
       end
 
-
-      context 'geolocation is retured if it is found by url in db' do
+      context 'and url geolocalization is in db' do
         let(:params) { { url: 'https://www.stackoverflow.com' } }
         it 'should return geolocation' do
           geolocation
@@ -43,10 +38,15 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
     end
 
     context 'when no error is raised from external API' do
-      context 'geolocation is retured if it is not found by ip in db' do
+      context 'and ip geolocalization is not in db' do
         let(:params) { { ip: '0.0.0.12' } }
+        before(:each) do
+          allow_any_instance_of(ExternalApiCaller).to receive(:call).with(params[:ip]).and_return(Success(build(:geolocation).data))
+        end
 
-        it { is_expected.to be_success }
+        it 'should return geolocation' do
+          is_expected.to be_success
+        end
       end
     end
 
@@ -98,7 +98,6 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
         expect(subject.failure).to eq({ error: 'IP Address is invalid' })
       end
 
-
       it 'should return failure message when calling external api returning (301)' do
         external_api_caller.and_return(Failure('Invalid fields'))
 
@@ -120,19 +119,19 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
         expect(subject.failure).to eq({ error: 'Not found' })
       end
     end
+  end
 
-    context 'when passing invalid body params' do
-      context 'failure is returned with invalid url' do
-        let(:params) { { url: nil } }
+  context 'when passing invalid params' do
+    context 'failure is returned with invalid url' do
+      let(:params) { { url: nil } }
 
-        it { is_expected.to be_failure }
-      end
+      it { is_expected.to be_failure }
+    end
 
-      context 'failure is returned with invalid ip' do
-        let(:params) { { ip: nil } }
+    context 'failure is returned with invalid ip' do
+      let(:params) { { ip: nil } }
 
-        it { is_expected.to be_failure }
-      end
+      it { is_expected.to be_failure }
     end
   end
 end
