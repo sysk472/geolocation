@@ -6,6 +6,11 @@ To access external API:
 ```
   1. Create .env file in project root directory
   2. Add your IP_STACK_ACCESS_KEY=VALUE
+  3. Add
+      DATABASE_HOST=database
+      POSTGRES_USER=postgres
+      POSTGRES_PASSWORD=mypassword
+      POSTGRES_DB=myapp
 
 ```
 
