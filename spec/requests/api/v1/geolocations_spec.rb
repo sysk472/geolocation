@@ -38,7 +38,7 @@ RSpec.describe "Api::V1::Geolocations", type: :request do
       end
 
       it 'should return geolocation object calling external api returning (200)' do
-        geolocation = build(:geolocation, :'195.245.224.53')
+        geolocation = create(:geolocation, :'195.245.224.53')
 
         allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Success(build(:geolocation).data))
 
@@ -51,102 +51,102 @@ RSpec.describe "Api::V1::Geolocations", type: :request do
       it 'should return failure message when calling external api returning (500)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::ConnectionError.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('There was an error with connecting external API'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::ConnectionError.message)
+        expect(json["error"]).to eq('There was an error with connecting external API')
       end
 
 
       it 'should return failure message when calling external api returning (101)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::AccessKey.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Missing access key or key invalid'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::AccessKey.message)
+        expect(json["error"]).to eq('Missing access key or key invalid')
       end
 
       it 'should return failure message when calling external api returning (103)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::InvalidApiFunction.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Invalid api function'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::InvalidApiFunction.message)
+        expect(json["error"]).to eq('Invalid api function')
       end
 
       it 'should return failure message when calling external api returning (104)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::LimitExceeded.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Limit exceeded'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::LimitExceeded.message)
+        expect(json["error"]).to eq('Limit exceeded')
       end
 
       it 'should return failure message when calling external api returning (105)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::AccessRestricted.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Access restricted'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::AccessRestricted.message)
+        expect(json["error"]).to eq('Access restricted')
       end
 
       it 'should return failure message when calling external api returning (106)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::AddressIpInvalid.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('IP Address is invalid'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::AddressIpInvalid.message)
+        expect(json["error"]).to eq('IP Address is invalid')
       end
 
 
       it 'should return failure message when calling external api returning (301)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::InvalidFields.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Invalid fields'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::InvalidFields.message)
+        expect(json["error"]).to eq('Invalid fields')
       end
 
       it 'should return failure message when calling external api returning (302)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::TooManyIps.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Too many ips'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::TooManyIps.message)
+        expect(json["error"]).to eq('Too many ips')
       end
 
       it 'should return failure message when calling external api returning (404)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::NotFound.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Not found'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::NotFound.message)
+        expect(json["error"]).to eq('Not found')
       end
     end
   end
@@ -195,7 +195,7 @@ RSpec.describe "Api::V1::Geolocations", type: :request do
         }
 
         expect(response.status).to eq(422)
-        expect(json["error"]).to eq(["Params wrong number of them"])
+        expect(json["error"]).to eq(["Ip is in invalid format", "Url is in invalid format"])
       end
     end
 
@@ -219,102 +219,102 @@ RSpec.describe "Api::V1::Geolocations", type: :request do
       it 'should return failure message when calling external api returning (500)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::ConnectionError.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('There was an error with connecting external API'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::ConnectionError.message)
+        expect(json["error"]).to eq('There was an error with connecting external API')
       end
 
 
       it 'should return failure message when calling external api returning (101)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::AccessKey.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Missing access key or key invalid'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::AccessKey.message)
+        expect(json["error"]).to eq('Missing access key or key invalid')
       end
 
       it 'should return failure message when calling external api returning (103)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::InvalidApiFunction.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Invalid api function'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::InvalidApiFunction.message)
+        expect(json["error"]).to eq('Invalid api function')
       end
 
       it 'should return failure message when calling external api returning (104)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::LimitExceeded.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Limit exceeded'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::LimitExceeded.message)
+        expect(json["error"]).to eq('Limit exceeded')
       end
 
       it 'should return failure message when calling external api returning (105)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::AccessRestricted.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Access restricted'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::AccessRestricted.message)
+        expect(json["error"]).to eq('Access restricted')
       end
 
       it 'should return failure message when calling external api returning (106)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::AddressIpInvalid.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('IP Address is invalid'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::AddressIpInvalid.message)
+        expect(json["error"]).to eq('IP Address is invalid')
       end
 
 
       it 'should return failure message when calling external api returning (301)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::InvalidFields.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Invalid fields'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::InvalidFields.message)
+        expect(json["error"]).to eq('Invalid fields')
       end
 
       it 'should return failure message when calling external api returning (302)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::TooManyIps.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Too many ips'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::TooManyIps.message)
+        expect(json["error"]).to eq('Too many ips')
       end
 
       it 'should return failure message when calling external api returning (404)' do
         geolocation = build(:geolocation, :'195.245.224.53')
 
-        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure(Exceptions::NotFound.message))
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip).and_return(Failure('Not found'))
 
         get "/api/v1/geolocations?ip=#{geolocation.ip}"
 
         expect(response.status).to eq(422)
-        expect(json["message"]).to eq(Exceptions::NotFound.message)
+        expect(json["error"]).to eq('Not found')
       end
     end
   end

@@ -21,7 +21,7 @@ module Geolocations
     def create(params)
       response = ExternalApiCaller.new.call(params)
 
-      response.success? ? Success(response.success) : Failure(response.failure)
+      response.success? ? Success(response.success) : Failure(error: response.failure)
     end
 
     def create_geolocation(body)
@@ -31,7 +31,7 @@ module Geolocations
         data: body
       )
 
-      geolocation.persisted? ? Success(geolocation) : Failure("Something went wrong")
+      geolocation.persisted? ? Success(geolocation) : Failure(error: "Something went wrong")
     end
   end
 end
