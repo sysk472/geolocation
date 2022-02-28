@@ -1,6 +1,9 @@
+require 'exceptions'
 class ApplicationService
-  def self.call(*args)
-      new(*args).call
+  include Dry::Transaction
+
+  def self.call(*args, &block)
+    new.call(*args, &block)
   end
 
   def pretty_errors(errors)
@@ -14,6 +17,6 @@ class ApplicationService
   def prepare_uri(url)
     return if url.nil?
 
-    @url = URI.parse(url).host
+    @url = URI.parse(url).host.sub(/^www./,'')
   end
 end

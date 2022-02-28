@@ -1,5 +1,5 @@
 module Geolocations
-  class Show < ApplicationService
+  class Presenter < ApplicationService
     include Dry::Transaction
 
     step :validate
@@ -23,12 +23,16 @@ module Geolocations
       begin
         geolocation = Geolocation.find_by!(params)
       rescue ActiveRecord::RecordNotFound
+        response = ExternalApiCaller.call(params.values.first)
+
+        return Failure(response.failure) unless response.success?
+
         geolocation = JSON.parse(
-          ExternalApiCall.new.call(params.values.first).success
+          response
         )
       end
-      # pytanie jak mam rozpatrywac jak przyjdzie 106 np
-      geolocation ? Success(geolocation) : Failure(error: 'Failed')
+
+      geolocation ? Success(geolocation) : Failure(error: 'Failed to get geolocation')
     end
   end
 end

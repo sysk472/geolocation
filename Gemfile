@@ -36,17 +36,16 @@ gem "bootsnap", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem "rack-cors"
 
-# Rswag extends rspec-rails "request specs" with a Swagger-based DSL for describing and testing API operations
-gem 'rswag'
-
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
   gem 'byebug'
   # rspec-rails brings the RSpec testing framework to Ruby on Rails as a drop-in alternative to its default testing framework, Minitest
   gem 'rspec-rails'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'database_cleaner'
+  gem 'simplecov'
+  gem 'webmock'
 end
 
 group :development do
@@ -55,7 +54,7 @@ group :development do
 end
 
 # Faraday is an HTTP client library that provides a common interface over many adapters (such as Net::HTTP) and embraces the concept of Rack middleware when processing the request/response cycle.
-# gem 'faraday'
+gem 'faraday'
 
 # dry-transaction is a business transaction DSL. It provides a simple way to define a complex business transaction that includes processing over many steps and by many different objects.
 gem 'dry-transaction'
@@ -65,6 +64,4 @@ gem 'dry-validation'
 
 # Resolv is a thread-aware DNS resolver library written in Ruby. Resolv can handle multiple DNS requests concurrently without blocking the entire Ruby interpreter.
 gem 'resolv'
-
-gem 'httparty'
 

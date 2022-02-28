@@ -5,14 +5,13 @@ class Api::V1::GeolocationsController < ApplicationController
   # GET show_by_query /geolocations? ip || url
   #-----------------------------------------------------------------------------
   def show_by_query
-    geolocation = ::Geolocations::Show.new
-    geolocation.call(query_params) do |final_step|
+    ::Geolocations::Presenter.call(query_params) do |final_step|
       final_step.success do |response|
         render json: { geolocation: response }, status: 200
       end
 
       final_step.failure do |response|
-        render json: response, status: 422
+        render json: { message: response }, status: 422
       end
     end
   end
@@ -28,14 +27,13 @@ class Api::V1::GeolocationsController < ApplicationController
   # POST create /geolocations
   #-----------------------------------------------------------------------------
   def create
-    geolocation = ::Geolocations::Create.new
-    geolocation.call(permitted_params) do |final_step|
+    ::Geolocations::Creator.call(permitted_params) do |final_step|
       final_step.success do |response|
         render json: { geolocation: response }, status: 201
       end
 
       final_step.failure do |response|
-        render json: response, status: 422
+        render json: { message: response }, status: 422
       end
     end
   end
@@ -46,7 +44,7 @@ class Api::V1::GeolocationsController < ApplicationController
   def destroy
     if @geolocation.destroy
       render json: {
-        message: "Geolocation deleted"
+        geolocation: "Geolocation deleted"
       }, status: 204
     else
       render json: {

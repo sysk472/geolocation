@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::API
   before_action :cors_preflight_check
 
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
+
   def cors_preflight_check
     return unless request.method == 'OPTIONS'
 
@@ -17,5 +19,9 @@ class ApplicationController < ActionController::API
       'Auth-Token, Email, X-User-Token, X-User-Email, x-xsrf-token'
     response.headers['Access-Control-Max-Age'] = '1728000'
     response.headers['Access-Control-Allow-Credentials'] = true
+  end
+
+  def render_not_found_response(exception)
+    render json: { error: "Not found" }, status: :not_found
   end
 end

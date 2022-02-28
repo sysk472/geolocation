@@ -12,6 +12,9 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
+require 'webmock/rspec'
+require 'support/json_helper'
+
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -91,4 +94,10 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+  config.include JsonHelper
+  config.before(:each) do
+    stub_request(:get, /api.ipstack.com/).
+      with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+      to_return(status: 200, body: "body", headers: {})
+  end
 end
