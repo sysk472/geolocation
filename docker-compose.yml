@@ -15,6 +15,7 @@ services:
       - POSTGRES_PASSWORD=mypassword
       - AWS=blabla
       - AWS_ACCESS_KEY=elo
+      - AWS_ACCESS=HEY
     volumes:
       - db_data:/var/lib/postgresql/database
 volumes:
