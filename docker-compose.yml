@@ -13,6 +13,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mypassword
+      - AWS=blabla
     volumes:
       - db_data:/var/lib/postgresql/database
 volumes:
