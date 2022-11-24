@@ -46,6 +46,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'simplecov'
   gem 'webmock'
+  gem 'dotenv-rails'
 end
 
 group :development do

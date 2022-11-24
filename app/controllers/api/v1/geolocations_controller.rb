@@ -11,7 +11,7 @@ class Api::V1::GeolocationsController < ApplicationController
       end
 
       final_step.failure do |response|
-        render json: { message: response }, status: 422
+        render json: response, status: 422
       end
     end
   end
@@ -33,7 +33,7 @@ class Api::V1::GeolocationsController < ApplicationController
       end
 
       final_step.failure do |response|
-        render json: { message: response }, status: 422
+        render json: response, status: 422
       end
     end
   end
@@ -47,8 +47,8 @@ class Api::V1::GeolocationsController < ApplicationController
         geolocation: "Geolocation deleted"
       }, status: 204
     else
-      render json: {
-        message: "There have been problems with deleting record"
+      render json: { error:
+        "There have been problems with deleting record"
       }, status: 422
     end
   end

@@ -13,16 +13,16 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
   context 'geolocation is retured if it is not found by url in db' do
     let(:params) { { url: 'https://www.google.com/woho' } }
 
-    it { is_expected.to be_success }
-    it 'has proper geolocation attribute' do
-      expect(subject.success).to be([url: "google.com"])
+    it 'should return geolocation' do
+      allow_any_instance_of(ExternalApiCaller).to receive(:call).with('google.com').and_return(Success(build(:geolocation, :google).data))
+      is_expected.to be_success
     end
   end
 
   context 'when passing valid body params' do
     let(:params) { { ip: '195.245.224.52' } }
+    let(:geolocation) { create(:geolocation) }
     let(:external_api_caller) do
-      geolocation = build(:geolocation)
       allow_any_instance_of(ExternalApiCaller).to receive(:call).with(geolocation.ip)
     end
 
@@ -34,8 +34,11 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
 
       context 'geolocation is retured if it is found by url in db' do
         let(:params) { { url: 'https://www.stackoverflow.com' } }
-
-        it { is_expected.to be_success }
+        it 'should return geolocation' do
+          geolocation
+          is_expected.to be_success
+          expect(subject.success).to be_a(Geolocation)
+        end
       end
     end
 
@@ -48,68 +51,73 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
     end
 
     context 'when error is raised from external API' do
+      let(:params) { { ip: '195.245.0.0' } }
+      let(:external_api_caller) do
+        allow_any_instance_of(ExternalApiCaller).to receive(:call).with('195.245.0.0')
+      end
+
       it 'should return failure message when calling external api returning (500)' do
         external_api_caller.and_return(Failure('There was an error with connecting external API'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq('There was an error with connecting external API')
+        expect(subject.failure).to eq({ error: 'There was an error with connecting external API' })
       end
 
       it 'should return failure message when calling external api returning (101)' do
-        external_api_caller.and_return(Failure(Exceptions::AccessKey.message))
+        external_api_caller.and_return(Failure('Missing access key or key invalid'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'Missing access key or key invalid' })
       end
 
       it 'should return failure message when calling external api returning (103)' do
-        external_api_caller.and_return(Failure(Exceptions::InvalidApiFunction.message))
+        external_api_caller.and_return(Failure('Invalid api function'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'Invalid api function' })
       end
 
       it 'should return failure message when calling external api returning (104)' do
-        external_api_caller.and_return(Failure(Exceptions::LimitExceeded.message))
+        external_api_caller.and_return(Failure('Limit exceeded'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'Limit exceeded' })
       end
 
       it 'should return failure message when calling external api returning (105)' do
-        external_api_caller.and_return(Failure(Exceptions::AccessRestricted.message))
+        external_api_caller.and_return(Failure('Access restricted'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'Access restricted' })
       end
 
       it 'should return failure message when calling external api returning (106)' do
-        external_api_caller.and_return(Failure(Exceptions::AddressIpInvalid.message))
+        external_api_caller.and_return(Failure('IP Address is invalid'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'IP Address is invalid' })
       end
 
 
       it 'should return failure message when calling external api returning (301)' do
-        external_api_caller.and_return(Failure(Exceptions::InvalidFields.message))
+        external_api_caller.and_return(Failure('Invalid fields'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'Invalid fields' })
       end
 
       it 'should return failure message when calling external api returning (302)' do
-        external_api_caller.and_return(Failure(Exceptions::TooManyIps.message))
+        external_api_caller.and_return(Failure('Too many ips'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'Too many ips' })
       end
 
       it 'should return failure message when calling external api returning (404)' do
-        external_api_caller.and_return(Failure(Exceptions::NotFound.message))
+        external_api_caller.and_return(Failure('Not found'))
 
         is_expected.to be_failure
-        expect(subject.failure).to eq(Exceptions::AccessKey.message)
+        expect(subject.failure).to eq({ error: 'Not found' })
       end
     end
 

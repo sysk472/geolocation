@@ -27,10 +27,24 @@ Response: 201 - Created
 }
 Response: 422 - Unprocessable Entity
 {
-  #check that
+  error: "Invalid api function"
 }
 ```
+## Get geolocation
 
+Returns geolocation by url or ip
+
+```
+Request: GET /geolocations?ip || url
+Response: 200 - OK
+{
+    "ip": "123.123.123.123",
+    "url": null,
+    ...
+}
+Response: 422 - Unprocessable Entity
+
+```
 ## Get geolocation
 
 Returns geolocation by id
@@ -54,26 +68,11 @@ Delete geolocations by id
 Request: DELETE /geolocations/{id}
 Response: 204 - No Content
 {
-  message: "Geolocation deleted"
+  geolocation: "Geolocation deleted"
 }
 
 Response: 422 - No Content
 {
-  message: "There have been problems with deleting record"
-}
-```
-
-## Generic errors
-
-```
-Response: 503 - Service Unavailable
-{
-    "error": "DatabaseError",
-    "description": "Database is down, try again later"
-}
-Response: 503 - Service Unavailable
-{
-    "error": "ApiError",
-    "description": "Api is down, try again later"
+  error: "There have been problems with deleting record"
 }
 ```

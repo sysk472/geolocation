@@ -13,6 +13,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mypassword
+      - AWS=blabla
+      - AWS_ACCESS_KEY=elo
     volumes:
       - db_data:/var/lib/postgresql/database
 volumes:

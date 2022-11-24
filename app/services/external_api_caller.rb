@@ -14,9 +14,10 @@ class ExternalApiCaller < ApplicationService
 
   def call_client
     begin
-      response = Net::HTTP.get(external_api_uri(param))
+      response = Net::HTTP.get_response(external_api_uri(param))
+      body = response.body
 
-      case JSON.parse(response)["error"]["code"]
+      case JSON.parse(body)&.dig("error","code")
       when 101
         raise AccessKey
       when 103
@@ -34,7 +35,7 @@ class ExternalApiCaller < ApplicationService
       when 404
         raise NotFound
       when nil
-        Success(response)
+        Success(body)
       end
     rescue *Exceptions::EXTERNAL_API => e
       Failure(e.message)
@@ -48,7 +49,7 @@ class ExternalApiCaller < ApplicationService
       host: Rails.application.credentials[:IP_STACK_URL],
       path: "/#{param}",
       query: {
-        access_key: Rails.application.credentials[:IP_STACK_ACCESS_KEY]
+        access_key: ENV['IP_STACK_ACCESS_KEY']
       }.to_query
     )
   end

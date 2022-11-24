@@ -25,11 +25,9 @@ module Geolocations
       rescue ActiveRecord::RecordNotFound
         response = ExternalApiCaller.call(params.values.first)
 
-        return Failure(response.failure) unless response.success?
+        return Failure(error: response.failure) unless response.success?
 
-        geolocation = JSON.parse(
-          response
-        )
+        geolocation = JSON.parse(response.success)
       end
 
       geolocation ? Success(geolocation) : Failure(error: 'Failed to get geolocation')

@@ -95,9 +95,4 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
   config.include JsonHelper
-  config.before(:each) do
-    stub_request(:get, /api.ipstack.com/).
-      with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
-      to_return(status: 200, body: "body", headers: {})
-  end
 end
