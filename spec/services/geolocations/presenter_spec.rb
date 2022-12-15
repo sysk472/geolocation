@@ -19,6 +19,7 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
     end
   end
 
+
   context 'when passing valid body params' do
     let(:params) { { ip: '195.245.224.52' } }
     let(:geolocation) { create(:geolocation) }
