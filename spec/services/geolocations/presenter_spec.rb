@@ -17,6 +17,7 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
       #check it
       #che
       #check
+      
       allow_any_instance_of(ExternalApiCaller).to receive(:call).with('google.com').and_return(Success(build(:geolocation, :google).data))
       is_expected.to be_success
     end
