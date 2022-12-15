@@ -46,6 +46,7 @@ RSpec.describe Geolocations::Presenter, type: :transaction do
       context 'geolocation is retured if it is not found by ip in db' do
         let(:params) { { ip: '0.0.0.12' } }
 
+
         it { is_expected.to be_success }
       end
     end
